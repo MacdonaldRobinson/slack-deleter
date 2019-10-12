@@ -34,7 +34,7 @@ var app = new Vue({
             sessionStorage.setItem("app_data", JSON.stringify(this.$data));
         },
         updateSignUpButton() {
-            this.signup_button_href = `https://slack.com/oauth/authorize?scope=channels:history,groups:history,im:history,mpim:history,channels:read,im:read,users:read,channels:write,chat:write:user,im:write&redirect_uri=${window.location.href}&client_id=${this.client_id}`;
+            this.signup_button_href = `https://slack.com/oauth/authorize?scope=channels:history,groups:history,im:history,mpim:history,channels:read,im:read,users:read,channels:write,chat:write:user,im:write&redirect_uri=${window.location.href}&client_id=${this.client_id}`;            
         },
         getAuthAccess() {
             return this.auth_access;
@@ -180,6 +180,7 @@ var app = new Vue({
         this.initialize();
     },
     updated: function() {
+        this.updateSignUpButton();
         this.updateStorage();
     }
 });
