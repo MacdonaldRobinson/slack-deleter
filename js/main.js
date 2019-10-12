@@ -97,7 +97,7 @@ var app = new Vue({
             fetch(historyEndPoint).then(async(res) => {
                 let conversationJson = await res.json();
 
-                console.log(conversationJson);
+                console.log(cursor, conversationJson);
 
                 let messages = conversationJson.messages;
 
@@ -109,14 +109,12 @@ var app = new Vue({
                     return false;
                 });
 
-                this.Log(`Will delete ${filteredMessages.length} message(s) at cursor`);
+                this.Log(`Will delete ${filteredMessages.length} message(s) at cursor '${cursor}'`);
 
                 if (filteredMessages.length > 0) {
 
                     filteredMessages.forEach((item, index) => {
                         let timeout = setTimeout(() => {
-                            console.log(item);
-
                             var deleteEndpoint = "https://slack.com/api/chat.delete?token=" + authAccess.access_token + "&channel=" + this.channel_id + "&ts=" + item.ts;
                             fetch(deleteEndpoint).then(async(res) => {
                                 let deleteJson = await res.json();
@@ -140,8 +138,8 @@ var app = new Vue({
         },
         moveToCursor(cursor){
             console.log("Moving to next cursor", cursor);
-            if (cursor != undefined && cursor != "" && cursor != null) {
-                this.deleteMessages(cursor);
+            if (cursor != undefined && cursor.next_cursor != undefined) {
+                this.deleteMessages(cursor.next_cursor);
             } else {
                 this.Log("End");
             }
