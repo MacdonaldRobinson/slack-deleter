@@ -34,7 +34,7 @@ var app = new Vue({
             sessionStorage.setItem("app_data", JSON.stringify(this.$data));
         },
         updateSignUpButton() {
-            this.signup_button_href = `https://slack.com/oauth/authorize?scope=channels:history,groups:history,im:history,mpim:history,channels:read,im:read,users:read,channels:write,chat:write:user,im:write&redirect_uri=${window.location.href}&client_id=${this.client_id}`;            
+            this.signup_button_href = `https://slack.com/oauth/authorize?scope=channels:history,groups:history,im:history,mpim:history,channels:read,im:read,users:read,channels:write,chat:write:user,im:write&client_id=${this.client_id}&redirect_uri=${window.location.origin}`;            
         },
         getAuthAccess() {
             return this.auth_access;
@@ -128,27 +128,23 @@ var app = new Vue({
                             });
 
                             if (index >= filteredMessages.length - 1) {
-                                this.Log("No more messages for the user in cursor " + cursor);
-                                if (conversationJson.response_metadata != undefined) {
-                                    console.log("Moving to next cursor", cursor);
-                                    this.deleteMessages(cursor);
-                                } else {
-                                    this.Log("End");
-                                }
+                                this.moveToCursor(conversationJson.response_metadata);                                
                             }
 
                         }, index * 3 * 1000);
                     });
                 } else {
-                    this.Log("No more messages for the user in cursor", cursor);
-                    if (conversationJson.response_metadata != undefined) {
-                        console.log("Moving to next cursor", cursor);
-                        this.deleteMessages(cursor);
-                    } else {
-                        this.Log("End");
-                    }
+                    this.moveToCursor(conversationJson.response_metadata);
                 }
             });
+        },
+        moveToCursor(cursor){
+            console.log("Moving to next cursor", cursor);
+            if (cursor != undefined && cursor != "" && cursor != null) {
+                this.deleteMessages(cursor);
+            } else {
+                this.Log("End");
+            }
         },
         getQueryString(param) {
             let paramPair = window.location.search.replace('?', '').split('&')
@@ -167,6 +163,7 @@ var app = new Vue({
         },
         Run() {
             console.log("Ran Run");
+            this.ClearLog();
             this.deleteMessages();
         },
         ClearLog() {
