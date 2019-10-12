@@ -1,0 +1,62 @@
+*{
+    margin: 0;
+    padding: 0;
+
+    --slack-color: #3F0E40;
+    --highlight-color:#ff4f4f;
+}
+body{
+    background-color: var(--slack-color);
+    color: #fff;
+}
+
+a, a:visited, a:link{
+    color:var(--highlight-color);
+}
+
+input{
+    width: 100%;
+}
+
+.app__container{
+    display: flex;
+    flex-direction: column;
+}
+
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+main{
+    display: flex;
+    flex-direction: row;
+}
+.steps{
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    padding: 10px;
+}
+
+.steps ol{
+    padding-left: 15px;
+}
+
+.steps li{
+    margin: 10px;
+}
+
+.output{
+    border: 1px solid;
+    width: 100%;
+    padding: 5px;
+    overflow: scroll;
+}
+
+.total_count{
+    color: var(--highlight-color);
+    font-weight: bold;
+}

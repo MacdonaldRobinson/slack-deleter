@@ -1,328 +1,61 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset='utf-8'>
-	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-	<title>Slack Deleter</title>
-	<meta name='viewport' content='width=device-width, initial-scale=1'>
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-	<style>
-		*{
-			margin: 0;
-			padding: 0;
-
-			--slack-color: #3F0E40;
-			--highlight-color:#ff4f4f;
-		}
-		body{
-			background-color: var(--slack-color);
-			color: #fff;
-		}
-
-		a, a:visited, a:link{
-			color:var(--highlight-color);
-		}
-
-		input{
-			width: 100%;
-		}
-
-		.app__container{
-			display: flex;
-			flex-direction: column;
-		}
-
-		header{
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			padding: 30px;
-		}
-		main{
-			display: flex;
-			flex-direction: row;
-		}
-		.steps{
-			display: flex;
-			flex-direction: column;
-			min-width: 400px;
-			padding: 10px;
-		}
-
-		.steps ol{
-			padding-left: 15px;
-		}
-
-		.steps li{
-			margin: 10px;
-		}
-
-		.output{
-			border: 1px solid;
-			width: 100%;
-			padding: 5px;
-			overflow: scroll;
-		}
-
-		.total_count{
-			color: var(--highlight-color);
-			font-weight: bold;
-		}
-	</style>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Slack Deleter</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="./css/main.css" type="text/css" rel="stylesheet"></link>
 
 </head>
+
 <body>
-	<div id="app">
-		<div class="app__container">
-			<header>
-				<h1>Slack Deleter</h1>
-				<p>Slack does not allow deleting messages in bulk, so this tool deletes ALL your messages from a specific channel on a timer</p>
-			</header>
-			<main>
-				<div class="steps">
-					<h2>Steps</h2>
-					<ol>
-						<li>
-							Create a slack app and install it ( <a href="https://api.slack.com/start/overview"  target="_blank">Instructions Here</a> )
-						</li>
-						<li>
-							Enter the Client Id here:<br>
-							<input id="client_id" type="text" v-model="client_id">
-						</li>
-						<li>
-							Enter the Client secret here:<br>
-							<input id="client_secret" type="text" v-model="client_secret">
-						</li>
-						<li>
-							Enter the channel Id here ( <a href="https://www.wikihow.com/Find-a-Channel-ID-on-Slack-on-PC-or-Mac" target="_blank">Instructions Here</a> ):<br>
-							<input id="channel_id" type="text" v-model="channel_id">
-						</li>
-						<li v-if="client_id && signup_button_href">
-							Sign into Slack and provide access by clicking this button:<br>
-							<a id="SlackSignupButton" :href="signup_button_href"><img src="https://api.slack.com/img/sign_in_with_slack.png" /></a>
-						</li>
-						<li v-if="auth_access">
-							Run the tool:<br>
-							<button id="Run" v-on:click="Run">Run</button>
-						</li>
-						<li v-if="auth_access">
-							View the total messages deleted:
-							<span class="total_count">{{messages_deleted_count}}</span> Message(s) deleted
-						</li>
-					</ol>
-				</div>
-				<div class="output">
-					<p v-for="log in logs">{{log}}</p>
-				</div>
-			</main>
-		</div>
-	</div>
-	<script>
-		var app = new Vue({
-			el: "#app",
-			data: {
-				client_id: "",
-				client_secret: "",
-				channel_id: "",
-				code: "",
-				signup_button_href: '',
-				auth_access: "",
-				logs: [],
-				messages_deleted_count: 0
-			},
-			methods: {
-				initialize(){
-					this.ClearLog();
-					let data = sessionStorage.getItem("app_data");
-
-					if(data != undefined && data != "")
-					{
-						let json = JSON.parse(data);
-						Object.assign(this.$data, json);
-					}
-
-					let code = this.getQueryString("code");
-
-					if(code != "" && code != undefined && code != null)
-					{
-						this.code = code;
-					}
-
-					this.updateSignUpButton();
-					this.updateStorage();
-					this.checkAuthAccess();
-				},
-				updateStorage(){
-					sessionStorage.setItem("app_data", JSON.stringify(this.$data) );
-				},
-				updateSignUpButton(){
-					this.signup_button_href = `https://slack.com/oauth/authorize?scope=channels:history,groups:history,im:history,mpim:history,channels:read,im:read,users:read,channels:write,chat:write:user,im:write&redirect_uri=${window.location.href}&client_id=${this.client_id}`;
-				},
-				getAuthAccess() {
-					return this.auth_access;
-				},
-				setAuthAccess(authAccess) {
-					this.auth_access = authAccess;
-				},
-				checkAuthAccess(callbackFunction){
-					this.ClearLog();
-					console.log("Ran checkAuthAccess");
-
-					code = this.code;
-					authAccess = this.getAuthAccess();
-
-					console.log("code", code);
-
-					if(authAccess == null || !authAccess.ok)
-					{
-						this.fetchAuthAccess(code, (authAccess)=>{
-							console.log("Callback for fetchAuthAccess", authAccess);
-
-							this.setAuthAccess(authAccess);
-							if(typeof(callbackFunction) == 'function')
-							{
-								callbackFunction();
-							}
-						});
-					}
-				},
-				fetchAuthAccess(code, callBackFunction){
-					let endPoint = `https://slack.com/api/oauth.access?client_id=${this.client_id}&client_secret=${this.client_secret}&code=${code}&scope=identity.basic,channels:history,groups:history,mpim:history,im:history`;
-
-					fetch(endPoint)
-					.then(async (res)=>{
-
-						authAccess = await res.json();
-						console.log("Ran fetchAuthAccess then", authAccess);
-
-						if(authAccess.ok)
-						{
-							callBackFunction(authAccess);
-						}
-						else
-						{
-							this.Log("Please relogin");
-						}
-					});
-				},
-				deleteMessages(cursor)
-				{
-					console.log("Ran deleteMessages");
-
-					let authAccess = this.getAuthAccess();
-
-					if(!authAccess.ok)
-					{
-						this.Log("Please sign in to Slack");
-						return;
-					}
-
-					let historyEndPoint = `https://slack.com/api/conversations.history?token=${authAccess.access_token}&channel=${this.channel_id}`;
-
-					if(cursor != undefined && cursor != "")
-					{
-						historyEndPoint = `https://slack.com/api/conversations.history?token=${authAccess.access_token}&channel=D0P7Y3FU7&cursor=${cursor}`;
-					}
-
-					fetch(historyEndPoint).then(async (res)=>{
-						let conversationJson = await res.json();
-
-						console.log(conversationJson);
-
-						let messages = conversationJson.messages;
-
-						let filteredMessages = messages.filter((item)=>{
-							if(item.user == authAccess.user_id)
-							{
-								return true;
-							}
-
-							return false;
-						});
-
-						this.Log(`Will delete ${filteredMessages.length} message(s) at cursor`);
-
-						if(filteredMessages.length > 0){
-
-							filteredMessages.forEach((item, index)=>{
-								let timeout = setTimeout(()=>{
-									console.log(item);
-
-									var deleteEndpoint = "https://slack.com/api/chat.delete?token="+authAccess.access_token+"&channel="+this.channel_id+"&ts="+item.ts;
-									fetch(deleteEndpoint).then(async (res)=>{
-										let deleteJson = await res.json();
-
-										this.messages_deleted_count = this.messages_deleted_count + 1;
-										// let date = new Date(Number(item.ts));
-
-										//Log(`Deleted message index: ${index} with time stamp:${date}`);
-									});
-
-									if(index >= filteredMessages.length-1)
-									{
-										this.Log("No more messages for the user in cursor "+cursor);
-										if(conversationJson.response_metadata != undefined)
-										{
-											console.log("Moving to next cursor", cursor);
-											this.deleteMessages(cursor);
-										}
-										else
-										{
-											this.Log("End");
-										}
-									}
-
-								}, index * 3 * 1000);
-							});
-						}
-						else{
-							this.Log("No more messages for the user in cursor", cursor);
-							if(conversationJson.response_metadata != undefined)
-							{
-								console.log("Moving to next cursor", cursor);
-								this.deleteMessages(cursor);
-							}
-							else
-							{
-								this.Log("End");
-							}
-						}
-					});
-				},
-				getQueryString(param){
-					let paramPair = window.location.search.replace('?','').split('&')
-
-					let found = paramPair.reduce((pair)=>{
-						let split = pair.split(`${param}=`);
-
-						if(split.length > 1)
-						{
-							return split[1];
-						}
-
-						return "";
-					});
-
-					return found;
-				},
-				Run(){
-					console.log("Ran Run");
-					this.deleteMessages();
-				},
-				ClearLog(){
-					this.logs = [];
-				},
-				Log(message){
-					this.logs.push(message);
-				}
-			},
-			created: function(){
-				this.initialize();
-			},
-			updated: function(){
-				this.updateStorage();
-			}
-		});
-	</script>
+    <div id="app">
+        <div class="app__container">
+            <header>
+                <h1>Slack Deleter</h1>
+                <p>Slack does not allow deleting messages in bulk, so this tool deletes ALL your messages from a specific channel on a timer</p>
+            </header>
+            <main>
+                <div class="steps">
+                    <h2>Steps</h2>
+                    <ol>
+                        <li>
+                            Create a slack app and install it ( <a href="https://api.slack.com/start/overview" target="_blank">Instructions Here</a> )
+                        </li>
+                        <li>
+                            Enter the Client Id here:<br>
+                            <input id="client_id" type="text" v-model="client_id">
+                        </li>
+                        <li>
+                            Enter the Client secret here:<br>
+                            <input id="client_secret" type="text" v-model="client_secret">
+                        </li>
+                        <li>
+                            Enter the channel Id here ( <a href="https://www.wikihow.com/Find-a-Channel-ID-on-Slack-on-PC-or-Mac" target="_blank">Instructions Here</a> ):<br>
+                            <input id="channel_id" type="text" v-model="channel_id">
+                        </li>
+                        <li v-if="client_id && signup_button_href">
+                            Sign into Slack and provide access by clicking this button:<br>
+                            <a id="SlackSignupButton" :href="signup_button_href"><img src="https://api.slack.com/img/sign_in_with_slack.png" /></a>
+                        </li>
+                        <li v-if="auth_access">
+                            Run the tool:<br>
+                            <button id="Run" v-on:click="Run">Run</button>
+                        </li>
+                        <li v-if="auth_access">
+                            View the total messages deleted:
+                            <span class="total_count">{{messages_deleted_count}}</span> Message(s) deleted
+                        </li>
+                    </ol>
+                </div>
+                <div class="output">
+                    <p v-for="log in logs">{{log}}</p>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="./js/main.js"></script>    
 </body>
