@@ -7,6 +7,8 @@
   --output-bg-color:#fff;
   --output-text-color:#000;
   --header-bg-color:#000;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 body {
@@ -97,7 +99,7 @@ li {
 
 .output {
   border: 1px solid;
-  width: 100%;
+  width: 100vw;
   padding: 5px 20px;
   overflow: scroll;
   background-color: var(--output-bg-color);

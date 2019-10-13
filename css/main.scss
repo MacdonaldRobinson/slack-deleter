@@ -8,12 +8,14 @@
     --output-bg-color:#fff;
     --output-text-color:#000;
     --header-bg-color:#000;
+
+    box-sizing: border-box;
 }
 body{
     background-color: var(--dark-slack-color);
     color: #fff;
     font-family: helvetica;
-    font-size: 16px;
+    font-size: 16px;    
 }
 
 a, a:visited, a:link{
@@ -21,7 +23,7 @@ a, a:visited, a:link{
 }
 
 input{
-    width: 100%;
+    width: 100%;    
 }
 
 .app__container{
@@ -72,7 +74,7 @@ li{
 
 .output{
     border: 1px solid;
-    width: 100%;
+    width: 100vw;
     padding: 5px 20px;
     overflow: scroll;
     background-color: var(--output-bg-color);
