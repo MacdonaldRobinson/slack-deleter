@@ -22,10 +22,6 @@ a, a:visited, a:link {
   color: var(--highlight-color);
 }
 
-input {
-  width: 100%;
-}
-
 .app__container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -40,10 +36,10 @@ header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
+  -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+      -ms-flex-direction: row;
+          flex-direction: row;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -58,6 +54,11 @@ header {
 header h1 {
   background: url("/icons/favicon-32x32.png") no-repeat left center;
   padding-left: 40px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+header p {
   margin-bottom: 10px;
 }
 
@@ -81,6 +82,10 @@ main {
           flex-direction: column;
   padding: 10px;
   background-color: var(--dark-slack-color);
+}
+
+.steps input {
+  width: 100%;
 }
 
 .steps input, .steps #SlackSignupButton {
