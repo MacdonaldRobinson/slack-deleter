@@ -74,7 +74,7 @@ var app = new Vue({
                     if (authAccess.ok) {
                         callBackFunction(authAccess);
                     } else {
-                        this.Log("Please relogin");
+                        this.Log("Please click the 'Sign in with Slack' button, if you do not see the button then you need to fill in the client id field");
                     }
                 });
         },
