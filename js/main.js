@@ -13,7 +13,7 @@ var app = new Vue({
     methods: {
         initialize() {
             this.ClearLog();
-            let data = sessionStorage.getItem("app_data");
+            let data = localStorage.getItem("app_data");
 
             if (data != undefined && data != "") {
                 let json = JSON.parse(data);
@@ -31,7 +31,7 @@ var app = new Vue({
             this.checkAuthAccess();
         },
         updateStorage() {
-            sessionStorage.setItem("app_data", JSON.stringify(this.$data));
+            localStorage.setItem("app_data", JSON.stringify(this.$data));
         },
         updateSignUpButton() {
             this.signup_button_href = `https://slack.com/oauth/authorize?scope=channels:history,groups:history,im:history,mpim:history,channels:read,im:read,users:read,channels:write,chat:write:user,im:write&client_id=${this.client_id}&redirect_uri=${window.location.origin}`;            

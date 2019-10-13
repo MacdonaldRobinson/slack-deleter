@@ -1,12 +1,16 @@
 * {
   margin: 0;
   padding: 0;
-  --slack-color: #3F0E40;
+  --dark-slack-color: #300a30;
+  --light-slack-color: #3f0e40;
   --highlight-color:#ff4f4f;
+  --output-bg-color:#fff;
+  --output-text-color:#000;
+  --header-bg-color:#000;
 }
 
 body {
-  background-color: var(--slack-color);
+  background-color: var(--dark-slack-color);
   color: #fff;
 }
 
@@ -43,6 +47,8 @@ header {
       -ms-flex-align: center;
           align-items: center;
   padding: 30px;
+  text-align: center;
+  background-color: var(--header-bg-color);
 }
 
 main {
@@ -65,6 +71,7 @@ main {
           flex-direction: column;
   min-width: 400px;
   padding: 10px;
+  background-color: var(--dark-slack-color);
 }
 
 ol {
@@ -80,6 +87,8 @@ li {
   width: 100%;
   padding: 5px 20px;
   overflow: scroll;
+  background-color: var(--output-bg-color);
+  color: var(--output-text-color);
 }
 
 .total_count {
