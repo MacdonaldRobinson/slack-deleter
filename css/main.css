@@ -79,7 +79,6 @@ main {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  min-width: 400px;
   padding: 10px;
   background-color: var(--dark-slack-color);
 }
