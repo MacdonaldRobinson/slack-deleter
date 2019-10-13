@@ -12,6 +12,7 @@
 body{
     background-color: var(--dark-slack-color);
     color: #fff;
+    font-family: helvetica;
 }
 
 a, a:visited, a:link{
@@ -53,6 +54,11 @@ main{
     min-width: 400px;
     padding: 10px;
     background-color:var(--dark-slack-color);
+    
+    input, #SlackSignupButton{
+        display: inline-block;
+        margin-top: 5px;
+    }
 }
 
 ol{
@@ -60,7 +66,7 @@ ol{
 }
 
 li{
-    margin: 10px;
+    margin: 20px;
 }
 
 .output{
