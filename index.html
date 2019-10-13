@@ -35,18 +35,18 @@
                     <h2>Steps</h2>
                     <ol>
                         <li>
-                            Create a slack app and install it ( <a href="https://api.slack.com/start/overview" target="_blank">Instructions Here</a> )
+                            <a href="https://api.slack.com/start/overview" target="_blank">Create a slack app and install it </a>
                         </li>
                         <li>
-                            Enter the Client Id here:<br>
+                            Enter the client id here:<br>
                             <input id="client_id" type="text" v-model="client_id">
                         </li>
                         <li>
-                            Enter the Client secret here:<br>
+                            Enter the client secret here:<br>
                             <input id="client_secret" type="text" v-model="client_secret">
                         </li>
                         <li>
-                            Enter the channel Id here ( <a href="https://www.wikihow.com/Find-a-Channel-ID-on-Slack-on-PC-or-Mac" target="_blank">Instructions Here</a> ):<br>
+                            <a href="https://www.wikihow.com/Find-a-Channel-ID-on-Slack-on-PC-or-Mac" target="_blank">Enter the channel id here</a>:<br>
                             <input id="channel_id" type="text" v-model="channel_id">
                         </li>
                         <li v-if="client_id && signup_button_href">
