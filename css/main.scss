@@ -32,9 +32,15 @@ header{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 20px;
     text-align: center;
-    background-color: var(--header-bg-color);    
+    background-color: var(--header-bg-color);   
+    
+    h1{
+        background: url('/icons/favicon-32x32.png') no-repeat left center;
+        padding-left: 40px;     
+        margin-bottom: 10px;   
+    }
 }
 main{
     display: flex;

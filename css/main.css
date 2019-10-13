@@ -46,9 +46,15 @@ header {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
   background-color: var(--header-bg-color);
+}
+
+header h1 {
+  background: url("/icons/favicon-32x32.png") no-repeat left center;
+  padding-left: 40px;
+  margin-bottom: 10px;
 }
 
 main {
