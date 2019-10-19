@@ -3,4 +3,4 @@ Slack does not allow deleting messages in bulk, so this tool deletes all your me
 
 It was built using VueJS
 
-You can see the running site here: https://macdonaldrobinson.github.io/slack-deleter/
+You can see the running site here: https://www.slackdeleter.com/
