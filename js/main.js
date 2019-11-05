@@ -91,7 +91,7 @@ var app = new Vue({
             let historyEndPoint = `https://slack.com/api/conversations.history?token=${authAccess.access_token}&channel=${this.channel_id}`;
 
             if (cursor != undefined && cursor != "") {
-                historyEndPoint = `https://slack.com/api/conversations.history?token=${authAccess.access_token}&channel=D0P7Y3FU7&cursor=${cursor}`;
+                historyEndPoint = `https://slack.com/api/conversations.history?token=${authAccess.access_token}&channel=${this.channel_id}&cursor=${cursor}`;
             }
 
             fetch(historyEndPoint).then(async(res) => {
